@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meu Site Pessoal</title>
+  <style>
+    :root {
+      --cor-fundo-claro: #f5f5f5;
+      --cor-fundo-escuro: #121212;
+      --cor-texto-claro: #333;
+      --cor-texto-escuro: #ddd;
+      --cor-primaria: #333;
+      --cor-primaria-hover: #555;
+      --cor-apagar: #c0392b;
+      --cor-apagar-hover: #e74c3c;
+      --cor-success: #28a745;
+      --cor-warning: #ffc107;
+      --cor-info: #17a2b8;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--cor-fundo-claro);
+      color: var(--cor-texto-claro);
+      transition: background 0.4s, color 0.4s;
+    }
+    body.dark {
+      background: var(--cor-fundo-escuro);
+      color: var(--cor-texto-escuro);
+    }
+
+    header {
+      background: var(--cor-primaria);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    header button#toggleTheme {
+      background: none;
+      border: 2px solid white;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s, color 0.3s;
+    }
+    header button#toggleTheme:hover {
+      background: white;
+      color: var(--cor-primaria);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .hero {
+      background: url('https://source.unsplash.com/random/1200x400') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s forwards;
+    }
+
+    .hero h1 {
+      font-size: 3em;
+      margin: 0;
+    }
+
+    section {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s forwards;
+      animation-delay: 0.3s;
+      transition: background 0.4s, color 0.4s;
+    }
+    body.dark section {
+      background: #1e1e1e;
+      color: var(--cor-texto-escuro);
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    form input, form textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s, background 0.3s, color 0.3s;
+    }
+    body.dark form input, body.dark form textarea {
+      background: #333;
+      border-color: #555;
+      color: var(--cor-texto-escuro);
+    }
+    form input:focus, form textarea:focus {
+      border-color: var(--cor-primaria);
+      outline: none;
+    }
+
+    form button, .btn-editar, .btn-apagar, .btn-limpar {
+      background: var(--cor-primaria);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+      font-weight: 600;
+      user-select: none;
+      margin-top: 10px;
+    }
+    form button:hover, .btn-editar:hover {
+      background: var(--cor-primaria-hover);
+    }
+    .btn-apagar {
+      margin-left: 10px;
+      background: var(--cor-apagar);
+    }
+    .btn-apagar:hover {
+      background: var(--cor-apagar-hover);
+    }
+    .btn-limpar {
+      background: #555;
+      margin-left: 10px;
+    }
+    .btn-limpar:hover {
+      background: #777;
+    }
+
+    footer {
+      background: var(--cor-primaria);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    textarea.edit {
+      width: 100%;
+      height: 150px;
+      margin-top: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark textarea.edit {
+      background: #333;
+      color: var(--cor-texto-escuro);
+      border-color: #555;
+    }
+
+    #listaMensagens {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+    }
+
+    #listaMensagens > div {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      word-break: break-word;
+    }
+
+    #listaMensagens p {
+      margin: 0;
+      max-width: 75%;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+
+    #mensagemSucesso {
+      margin-top: 10px;
+      font-weight: 600;
+      color: var(--cor-success);
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    #mensagemSucesso.show {
+      opacity: 1;
+    }
+
+    #contadorMensagens {
+      font-weight: 700;
+      color: var(--cor-info);
+      margin-left: 5px;
+    }
+
+    .social-links {
+      margin-top: 15px;
+      text-align: center;
+    }
+    .social-links a {
+      margin: 0 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+    .social-links a:hover {
+      color: var(--cor-warning);
+    }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 2em;
+      }
+      section {
+        margin: 20px 10px;
+        padding: 30px 15px;
+      }
+      form button, .btn-editar, .btn-apagar, .btn-limpar {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Animações */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div><strong>Meu Site</strong></div>
+  <button id="toggleTheme" aria-label="Alternar tema claro e escuro">🌙 Dark Mode</button>
+</header>
+
+<div class="hero" id="home">
+  <h1>Bem-vindo ao Meu Site!</h1>
+  <p>Este é um site simples com HTML, CSS e JS</p>
+</div>
+
+<section id="sobre">
+  <h2>Sobre Mim</h2>
+  <div id="textoSobre">
+    <!-- Texto será carregado pelo JS -->
+  </div>
+  <button class="btn-editar" aria-label="Editar texto Sobre Mim" onclick="editarSobre()">Editar</button>
+</section>
+
+<section id="contato">
+  <h2>Fale Comigo</h2>
+  <form id="formContato" novalidate>
+    <input type="text" id="nome" placeholder="Nome" required aria-required="true" />
+    <input type="email" id="email" placeholder="Email" required aria-required="true" />
+    <textarea id="mensagem" placeholder="Deixe a sua mensagem" rows="5" required aria-required="true"></textarea>
+    <button type="submit">Enviar</button>
+    <button type="button" class="btn-limpar" aria-label="Limpar todas as mensagens enviadas" onclick="limparMensagens()">Limpar Mensagens</button>
+  </form>
+  <p id="mensagemSucesso" role="alert" aria-live="assertive">Mensagem enviada e salva localmente!</p>
+
+  <h3>Mensagens Enviadas <span id="contadorMensagens">(0)</span></h3>
+  <div id="listaMensagens" aria-live="polite" aria-relevant="additions"></div>
+</section>
+
+<footer>
+  &copy; 2025 Meu Site. Todos os direitos reservados.
+  <div class="social-links" aria-label="Redes sociais">
+    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">Twitter</a>
+    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">Facebook</a>
+    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+  let editando = false;
+
+  // Dark mode toggle com armazenamento local
+  const toggleBtn = document.getElementById('toggleTheme');
+  function aplicarTema(tema) {
+    if(tema === 'dark') {
+      document.body.classList.add('dark');
+      toggleBtn.textContent = '☀️ Light Mode';
+    } else {
+      document.body.classList.remove('dark');
+      toggleBtn.textContent = '🌙 Dark Mode';
+    }
+    localStorage.setItem('tema', tema);
+  }
+  toggleBtn.addEventListener('click', () => {
+    if(document.body.classList.contains('dark')) {
+      aplicarTema('light');
+    } else {
+      aplicarTema('dark');
+    }
+  });
+  // Aplica tema salvo ou padrão
+  const temaSalvo = localStorage.getItem('tema') || 'light';
+  aplicarTema(temaSalvo);
+
+  function carregarSobre() {
+    const textoSalvo = localStorage.getItem('textoSobre');
+    const divTexto = document.getElementById('textoSobre');
+    if(textoSalvo) {
+      divTexto.innerHTML = `<p>${textoSalvo}</p>`;
+    } else {
+      divTexto.innerHTML = `<p>Sou o Hugo 23 anos ja fiz demasiada programação da vida preferia não fazer mais obrigado.</p>`;
+    }
+  }
+
+  function editarSobre() {
+    const divTexto = document.getElementById('textoSobre');
+    const botao = document.querySelector('.btn-editar');
+
+    if (!editando) {
+      // Entrar em modo edição
+      const textoAtual = divTexto.innerText.trim();
+      divTexto.innerHTML = `<textarea id="editorTexto" class="edit" aria-label="Editor de texto sobre mim">${textoAtual}</textarea>`;
+      botao.textContent = "Salvar";
+      editando = true;
+    } else {
+      // Salvar edição
+      const novoTexto = document.getElementById('editorTexto').value.trim();
+      if(novoTexto.length === 0) {
+        alert('O texto não pode ficar vazio!');
+        return;
+      }
+      divTexto.innerHTML = `<p>${novoTexto}</p>`;
+      botao.textContent = "Editar";
+      editando = false;
+      localStorage.setItem('textoSobre', novoTexto);
+    }
+  }
+
+  function carregarMensagens() {
+    const lista = document.getElementById('listaMensagens');
+    const contador = document.getElementById('contadorMensagens');
+    lista.innerHTML = '';
+    const mensagens = JSON.parse(localStorage.getItem('mensagens')) || [];
+
+    contador.textContent = `(${mensagens.length})`;
+
+    if(mensagens.length === 0) {
+      lista.innerHTML = '<p>Nenhuma mensagem enviada ainda.</p>';
+      return;
+    }
+
+    mensagens.forEach((msg, index) => {
+      const divMsg = document.createElement('div');
+      divMsg.setAttribute('tabindex', '0');
+
+      const texto = 
+        `Nome: ${msg.nome}\n` +
+        `E-mail: ${msg.email}\n` +
+        `Mensagem: ${msg.mensagem}\n` +
+        `Data: ${msg.data}`;
+
+      const p = document.createElement('p');
+      p.textContent = texto;
+
+      const btnApagar = document.createElement('button');
+      btnApagar.textContent = 'Apagar';
+      btnApagar.className = 'btn-apagar';
+      btnApagar.setAttribute('aria-label', `Apagar mensagem de ${msg.nome}`);
+      btnApagar.onclick = () => apagarMensagem(index);
+
+      divMsg.appendChild(p);
+      divMsg.appendChild(btnApagar);
+      lista.appendChild(divMsg);
+    });
+  }
+
+  function apagarMensagem(indice) {
+    let mensagens = JSON.parse(localStorage.getItem('mensagens')) || [];
+    mensagens.splice(indice, 1);
+    localStorage.setItem('mensagens', JSON.stringify(mensagens));
+    carregarMensagens();
+  }
+
+  // Limpar todas as mensagens
+  function limparMensagens() {
+    if(confirm('Tem certeza que deseja apagar todas as mensagens?')) {
+      localStorage.removeItem('mensagens');
+      carregarMensagens();
+    }
+  }
+
+  // Validação simples e envio
+  document.getElementById('formContato').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const nome = document.getElementById('nome').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const mensagem = document.getElementById('mensagem').value.trim();
+
+    if(!nome) {
+      alert('Por favor, preencha o campo Nome.');
+      return;
+    }
+    if(!email || !validarEmail(email)) {
+      alert('Por favor, preencha um email válido.');
+      return;
+    }
+    if(!mensagem) {
+      alert('Por favor, preencha o campo Mensagem.');
+      return;
+    }
+
+    const dados = {
+      nome,
+      email,
+      mensagem,
+      data: new Date().toLocaleString()
+    };
+
+    let mensagens = JSON.parse(localStorage.getItem('mensagens')) || [];
+    mensagens.push(dados);
+    localStorage.setItem('mensagens', JSON.stringify(mensagens));
+
+    const msgSucesso = document.getElementById('mensagemSucesso');
+    msgSucesso.classList.add('show');
+
+    this.reset();
+    carregarMensagens();
+
+    setTimeout(() => {
+      msgSucesso.classList.remove('show');
+    }, 3000);
+  });
+
+  function validarEmail(email) {
+    // Regex simples para validar email
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+  }
+
+  // Demo clima via IP geolocation com API gratuita sem API key (ip-api.com)
+  async function carregarClima() {
+    try {
+      const response = await fetch('http://ip-api.com/json/?fields=status,city,country');
+      const data = await response.json();
+      if(data.status === 'success') {
+        const sobre = document.getElementById('sobre');
+        const infoClima = document.createElement('p');
+        infoClima.style.fontStyle = 'italic';
+        infoClima.style.fontSize = '0.9rem';
+        infoClima.style.marginTop = '10px';
+        infoClima.textContent = `Olá de ${data.city}, ${data.country}! Que tal um café? ☕️`;
+        sobre.appendChild(infoClima);
+      }
+    } catch (err) {
+      // falha silenciosa, só não mostra
+    }
+  }
+
+  // Inicializar tudo ao carregar a página
+  window.onload = () => {
+    carregarSobre();
+    carregarMensagens();
+    carregarClima();
+  };
+</script>
+
+</body>
+</html>
